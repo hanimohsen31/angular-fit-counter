@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { modules } from './shared/shared/shared.module';
-import { excercises } from './store/excercises';
-import { ExcercisesService } from './store/excercises.service';
+import { ThemeService } from './store/theme.service';
 
 let shared = [...modules];
 @Component({
@@ -15,12 +14,14 @@ let shared = [...modules];
 })
 export class AppComponent {
   title = 'fit-counter';
-  constructor(private ExcercisesService: ExcercisesService) {}
-  excercisesList = excercises;
-  
-  console() {
-    this.ExcercisesService.allListData$.subscribe((res: any) =>
-      console.log(res)
-    );
+
+  constructor(private ThemeService: ThemeService) {}
+
+  ngOnInit() {
+    this.getTheme();
+  }
+
+  getTheme() {
+    this.ThemeService.getTheme();
   }
 }

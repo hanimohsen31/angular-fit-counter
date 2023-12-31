@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "dist/fit-counter",
+    "public": "dist/fit-counter/browser",
     "ignore": [
       "firebase.json",
       "**/.*",

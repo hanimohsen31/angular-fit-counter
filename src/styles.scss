@@ -1,1 +1,114 @@
-/* You can add global styles to this file, and also import other style files */
+.background {
+  display: none;
+}
+
+.mb100{
+  margin-bottom: 100px;
+}
+
+.div-beta {
+  width: 100vw;
+  margin-top: 45%;
+  display: flex;
+  justify-content: center;
+  .h1-beta {
+    background-color: #0d6efd;
+    color: white;
+    width: 300px;
+    padding: 30px;
+    border-radius: 2px;
+    position: absolute;
+    text-align: center;
+  }
+}
+
+.dark {
+  nav,
+  .navbar {
+    background-color: #333333 !important;
+    color: white;
+    .navbar-brand {
+      color: white;
+    }
+    .navbar-toggler-icon {
+      filter: invert(1);
+    }
+    .navbar-collapse {
+      color: white;
+    }
+    .navbar-toggler {
+      border-color: white;
+      box-shadow: none;
+    }
+    a {
+      color: white !important ;
+    }
+  }
+
+  .background {
+    position: fixed;
+    display: block;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    object-fit: cover;
+    z-index: -10;
+    opacity: 0.8;
+    background-color: black;
+    filter: contrast(1.5);
+  }
+
+  .card {
+    overflow: hidden;
+    border: none;
+  }
+
+  .card-body {
+    background-color: yellow;
+  }
+
+  .card button {
+    background-color: black;
+    color: white;
+    border: none;
+  }
+
+  input {
+    background-color: black;
+    color: white;
+    &:focus {
+      background-color: black;
+      color: white;
+    }
+  }
+
+  .footerContainer {
+    .nav {
+      background-color: #1d1a1d;
+      // border: 1px solid #252325;
+    }
+
+    .nav-item {
+      color: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-item.active {
+      color: #6ba7a8;
+    }
+
+    .nav-item.active::before {
+      content: "";
+      background: radial-gradient(#6ba7a8, transparent);
+    }
+
+    .nav-indicator {
+      background-color: #6ba7a8;
+    }
+  }
+
+  .div-beta {
+    .h1-beta {
+      background-color: #333333;
+    }
+  }
+}

@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
-<div class="container">
-  <app-card *ngFor="let elm of excercisesList"
-    [title]="elm.title" [ex]="elm.ex" [img]="elm.img" [desc]="elm.desc"
-    ></app-card>
+<img class="background" src="assets/images/bg2.jpg" alt="">
+<div class="container mb100">
+  <router-outlet></router-outlet>
 </div>
+<app-footer></app-footer>
