@@ -22,5 +22,5 @@ import { modules } from '../shared/shared/shared.module';
 })
 export class LegsComponent {
   ngOnInit() {}
-  excercisesList: any = excercises?.legs;
+  excercisesList: any = [...excercises?.legs,...excercises?.calf];
 }

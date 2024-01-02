@@ -28,7 +28,7 @@ export class CardComponent {
   getDataFromLocalStorage() {
     let curruntList = this.ExcercisesService.allListData.getValue();
     let currunt = curruntList.find((elm: any) => elm?.ex == this.ex);
-    console.log(currunt);
+    // console.log(currunt);
     if (currunt) {
       this.counterList = currunt?.counter;
       this.listPlaceholder = currunt?.counter;
@@ -55,13 +55,15 @@ export class CardComponent {
   }
 
   remove(indx: number) {
-    this.listPlaceholder.splice(indx, 1);
-    this.counterList.splice(indx, 1);
-    this.ExcercisesService.remove(this.ex, indx);
-
-    if (this.counterList.length < 1) {
-      this.counterList.push({});
-      this.listPlaceholder = JSON.parse(JSON.stringify(this.counterList));
+    // console.log(this.counterList.length);
+    // if (this.counterList.length <= 1) {
+      // this.counterList.push({ c1: 0, c2: 0, c3: 0 });
+      // this.listPlaceholder = JSON.parse(JSON.stringify(this.counterList));
+    // }
+    if (this.counterList.length > 1) {
+      this.listPlaceholder.splice(indx, 1);
+      this.counterList.splice(indx, 1);
+      this.ExcercisesService.remove(this.ex, indx);
     }
   }
 
