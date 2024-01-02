@@ -5,7 +5,7 @@ import { excercises } from '../store/excercises';
 import { modules } from '../shared/shared/shared.module';
 
 @Component({
-  selector: 'app-rest',
+  selector: 'app-wrist',
   standalone: true,
   imports: [CommonModule, FormsModule, ...modules],
   template: `
@@ -20,7 +20,7 @@ import { modules } from '../shared/shared/shared.module';
     </div>
   `,
 })
-export class RestComponent {
+export class WristComponent {
   ngOnInit() {}
-  excercisesList: any = excercises?.rest;
+  excercisesList: any = excercises?.wrist;
 }

@@ -7,7 +7,7 @@ import { BackComponent } from './pages/back.component';
 import { ButtocksComponent } from './pages/buttocks.component';
 import { CalfComponent } from './pages/calf.component';
 import { LegsComponent } from './pages/legs.component';
-import { RestComponent } from './pages/rest.component';
+import { WristComponent } from './pages/wrist.component';
 import { TrapsComponent } from './pages/traps.component';
 import { TricepsComponent } from './pages/triceps.component';
 import { ExcercisesComponent } from './pages/excercises.component';
@@ -25,7 +25,7 @@ export const routes: Routes = [
   { path: 'shoulder', component: ShoulderComponent },
   { path: 'traps', component: TrapsComponent },
   { path: 'legs', component: LegsComponent },
-  { path: 'rest', component: RestComponent },
+  { path: 'wrist', component: WristComponent },
 
   { path: 'stats', component: StatsComponent },
   { path: 'excercises', component: ExcercisesComponent },

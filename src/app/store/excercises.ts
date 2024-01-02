@@ -557,23 +557,23 @@ export const excercises: any = {
       desc: 'desc',
     },
   ],
-  rest: [
+  wrist: [
     {
-      ex: 'rest1',
+      ex: 'wrist1',
       title: 'reversr wrist curls',
-      img: 'assets/images/rest (1).jpg',
+      img: 'assets/images/wrist (1).jpg',
       desc: 'desc',
     },
     {
-      ex: 'rest2',
+      ex: 'wrist2',
       title: 'wrist curls',
-      img: 'assets/images/rest (2).jpg',
+      img: 'assets/images/wrist (2).jpg',
       desc: 'desc',
     },
     // {
-    //   ex: 'rest3',
+    //   ex: 'wrist3',
     //   title: 'barbell behind the back wrist curl',
-    //   img: 'assets/images/rest (3).jpg',
+    //   img: 'assets/images/wrist (3).jpg',
     //   desc: 'desc',
     // },
   ],
