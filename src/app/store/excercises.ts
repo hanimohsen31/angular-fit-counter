@@ -786,5 +786,11 @@ export const excercises: any = {
     //   img: 'assets/images/chest (16).jpg',
     //   desc: 'desc',
     // },
+    {
+      ex: 'chest16',
+      title: 'Supine Bench Press Matrix',
+      img: 'assets/images/chest (17).jpg',
+      desc: 'desc',
+    },
   ]
 };

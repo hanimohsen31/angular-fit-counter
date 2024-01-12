@@ -33,7 +33,7 @@ export class CardComponent {
       this.counterList = currunt?.counter;
       this.listPlaceholder = currunt?.counter;
     } else {
-      this.counterList.push({ c1: 0, c2: 0, c3: 0 });
+      this.counterList.push({ c1: 0, c2: 0, c3: 0 , g1: 0, g2: 0, g3: 0 ,unit:'kg'});
       this.listPlaceholder.push({});
     }
   }

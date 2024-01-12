@@ -2,7 +2,7 @@
   display: none;
 }
 
-.mb100{
+.mb100 {
   margin-bottom: 100px;
 }
 
@@ -110,5 +110,14 @@
     .h1-beta {
       background-color: #333333;
     }
+  }
+
+  select {
+    background-color: black;
+    color: white;
+  }
+  option {
+    background-color: black;
+    color: white;
   }
 }
