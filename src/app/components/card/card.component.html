@@ -4,68 +4,41 @@
     <div class="card-body">
       <h5 class="card-title text-capitalize">{{ title }}</h5>
       <div class="card-text">
-        <div class="counter d-flex flex-wrap justify-content-between" *ngFor="let elm of listPlaceholder;let indx=index">
+        <div class="counter d-flex justify-content-between" *ngFor="let elm of listPlaceholder;let indx=index">
 
           <hr *ngIf="indx != 0" class="d-flex w-100">
 
-          <div class="d-flex justify-content-end flex-column">
+          <div class="d-flex justify-content-end flex-column col-3">
             <label class="px-1">G1</label>
             <input (change)="save()" [(ngModel)]="counterList[indx].c1" class="form-control" type="number">
             <input (change)="save()" [(ngModel)]="counterList[indx].g1" class="form-control counting" type="number">
-
           </div>
 
-          <!-- <div class="d-flex justify-content-end flex-column">
-            <label style="opacity: 0;">plac</label>
-            <input (change)="save()" [(ngModel)]="counterList[indx].g1" class="form-control counting" type="number">
-          </div> -->
-
-          <div class="d-flex justify-content-end flex-column">
+          <div class="d-flex justify-content-end flex-column col-3">
             <label class="px-1">G2</label>
             <input (change)="save()" [(ngModel)]="counterList[indx].c2" class="form-control" type="number">
             <input (change)="save()" [(ngModel)]="counterList[indx].g2" class="form-control counting" type="number">
           </div>
 
-          <!-- <div class="d-flex justify-content-end flex-column">
-            <label style="opacity: 0;">plac</label>
-            <input (change)="save()" [(ngModel)]="counterList[indx].g2" class="form-control counting" type="number">
-          </div> -->
-
-          <div class="d-flex justify-content-end flex-column">
+          <div class="d-flex justify-content-end flex-column col-3">
             <label class="px-1">G3</label>
             <input (change)="save()" [(ngModel)]="counterList[indx].c3" class="form-control" type="number">
             <input (change)="save()" [(ngModel)]="counterList[indx].g3" class="form-control counting" type="number">
           </div>
 
-          <!-- <div class="d-flex justify-content-end flex-column">
-            <label style="opacity: 0;">plac</label>
-            <input (change)="save()" [(ngModel)]="counterList[indx].g3" class="form-control counting" type="number">
-          </div> -->
-
-          <div class="d-flex justify-content-between flex-column">
+          <div class="d-flex justify-content-between flex-column col-3">
             <label class="px-1">Unit</label>
             <select (change)="save()" [(ngModel)]="counterList[indx].unit">
               <option class="text-center" value="kg" selected>KG</option>
               <option class="text-center" value="pd">Pd</option>
               <option class="text-center" value="plt">Plt</option>
             </select>
-
-            <div class="d-flex justify-content-between">
-              <button [disabled]="disabled" class="btn btn-outline-primary add" (click)="add()">+</button>
+            <div class="d-flex justify-content-between w-100">
+              <button [disabled]="disabled" class="btn btn-outline-primary" (click)="add()">+</button>
               <button [disabled]="disabled" class="btn btn-outline-danger" (click)="remove(indx)">-</button>
             </div>
 
           </div>
-
-          <!-- <div class="d-flex justify-content-end flex-column">
-            <label style="opacity: 0;">plac</label>
-            <button [disabled]="disabled" class="btn btn-outline-primary" (click)="add()">+</button>
-          </div> -->
-
-          <!-- <div class="d-flex justify-content-end flex-column">
-            <label style="opacity: 0;">plac</label>
-            <button [disabled]="disabled" class="btn btn-outline-danger" (click)="remove(indx)">-</button>
-          </div> -->
 
         </div>
       </div>
