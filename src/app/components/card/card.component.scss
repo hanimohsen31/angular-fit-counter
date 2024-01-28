@@ -28,3 +28,10 @@ button{
   align-items: center;
   width: 49.5%;
 }
+
+.records-container{
+  max-height: 250px;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column-reverse;
+}

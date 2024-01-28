@@ -3,10 +3,9 @@
     <img [src]="img" class="card-img-top" alt="missing" />
     <div class="card-body">
       <h5 class="card-title text-capitalize">{{ title }}</h5>
-      <div class="card-text">
+      <div class="card-text records-container">
+        <!-- starting loop -->
         <div class="counter d-flex flex-wrap justify-content-between" *ngFor="let elm of listPlaceholder;let indx=index">
-
-          <hr *ngIf="indx != 0" class="d-flex w-100 col-12">
 
           <div class="d-flex justify-content-end flex-column col-3">
             <label class="px-1">G1</label>
@@ -37,9 +36,9 @@
               <button [disabled]="disabled" class="btn btn-outline-primary" (click)="add()">+</button>
               <button [disabled]="disabled" class="btn btn-outline-danger" (click)="remove(indx)">-</button>
             </div>
-
           </div>
 
+          <hr *ngIf="indx != 0" class="d-flex w-100 col-12">
         </div>
       </div>
     </div>
