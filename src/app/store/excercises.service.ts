@@ -1,26 +1,27 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { Injectable } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
+import { HttpClient } from "@angular/common/http";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root",
 })
 export class ExcercisesService {
-  constructor() {
+  constructor(private HttpClient: HttpClient) {
     this.getDataFromLocalStorage();
   }
 
   placeolderCounter: any = {
-    ex: '',
-    img: '',
-    title: '',
-    counter: [{ c1: 10, c2: 10, c3: 10, date: '20231230:5:52' }],
+    ex: "",
+    img: "",
+    title: "",
+    counter: [{ c1: 10, c2: 10, c3: 10, date: "20231230:5:52" }],
   };
 
   allListData: any = new BehaviorSubject([this.placeolderCounter]);
   allListData$ = this.allListData.asObservable();
 
   getDataFromLocalStorage() {
-    let getLocalStorage = localStorage.getItem('excercises');
+    let getLocalStorage = localStorage.getItem("excercises");
     if (getLocalStorage) {
       let parsed: any = JSON.parse(getLocalStorage);
       this.allListData.next(parsed);
@@ -40,7 +41,7 @@ export class ExcercisesService {
     }
     this.allListData.next([]);
     this.allListData.next(list);
-    localStorage.setItem('excercises', JSON.stringify(list));
+    localStorage.setItem("excercises", JSON.stringify(list));
   }
 
   remove(ex: string, indx: number) {
@@ -55,6 +56,13 @@ export class ExcercisesService {
     }
     this.allListData.next([]);
     this.allListData.next(list);
-    localStorage.setItem('excercises', JSON.stringify(list));
+    localStorage.setItem("excercises", JSON.stringify(list));
+  }
+
+  syncData() {
+    let url = "https://fit-counter-default-rtdb.firebaseio.com/fitcounter.json";
+    let data: any = localStorage.getItem("excercises");
+    console.log(JSON.parse(data));
+    return this.HttpClient.post(url, data);
   }
 }
