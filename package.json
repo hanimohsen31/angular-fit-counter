@@ -7,8 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy" : "ng build && firebase deploy",
-    "all" :"git add . && git commit -m 'new-update' && git push origin main && ng build && firebase deploy"
+    "deploy": "ng build && firebase deploy",
+    "all": "git add . && git commit -m 'new-update' && git push origin main && ng build && firebase deploy"
   },
   "private": true,
   "dependencies": {
@@ -20,7 +20,9 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "chart.js": "^4.4.3",
     "firebase": "^10.7.1",
+    "ng2-charts": "^6.0.1",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

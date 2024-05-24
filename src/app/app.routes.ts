@@ -12,6 +12,7 @@ import { TrapsComponent } from './pages/traps.component';
 import { TricepsComponent } from './pages/triceps.component';
 import { ExcercisesComponent } from './pages/excercises.component';
 import { StatsComponent } from './pages/stats.component';
+import { SettingsComponent } from './pages/settings.component';
 
 export const routes: Routes = [
   { path: 'home', component: HomeComponent },
@@ -29,6 +30,6 @@ export const routes: Routes = [
 
   { path: 'stats', component: StatsComponent },
   { path: 'excercises', component: ExcercisesComponent },
-  { path: 'settings', component: StatsComponent },
+  { path: 'settings', component: SettingsComponent },
   { path: '**', redirectTo: 'excercises' },
 ];

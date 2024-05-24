@@ -1,33 +1,16 @@
 <div class="footerContainer">
   <nav class="nav">
-    <!-- <a
-      *ngFor="let elm of routes"
-      [routerLink]="elm.path"
-      class="nav-item"
-      routerLinkActive="active"
-    >
-      <i class="bx bx-heart"></i>
-      <span class="text-uppercase">{{ elm.path }}</span>
-
-      <div *ngIf="route == elm.path" class="nav-indicator-wrapper">
-        <span class="nav-indicator"></span>
-      </div>
-
-    </a> -->
-
     <a routerLink="excercises" class="nav-item" routerLinkActive="active">
       <i class="bx bx-heart"></i>
       <span class="text-uppercase">excercises</span>
-
       <div *ngIf="route == 'excercises'" class="nav-indicator-wrapper">
         <span class="nav-indicator"></span>
       </div>
     </a>
 
-    <a routerLink="stats" class="nav-item" routerLinkActive="active" (click)="syncData()" >
+    <a routerLink="stats" class="nav-item" routerLinkActive="active">
       <i class="bx bx-heart"></i>
       <span class="text-uppercase">stats</span>
-
       <div *ngIf="route == 'stats'" class="nav-indicator-wrapper">
         <span class="nav-indicator"></span>
       </div>
@@ -36,7 +19,6 @@
     <a routerLink="settings" class="nav-item" routerLinkActive="active">
       <i class="bx bx-heart"></i>
       <span class="text-uppercase">settings</span>
-
       <div *ngIf="route == 'settings'" class="nav-indicator-wrapper">
         <span class="nav-indicator"></span>
       </div>
@@ -44,12 +26,8 @@
 
     <a class="nav-item" (click)="switchTheme()">
       <i class="bx bx-heart"></i>
-      <span class="text-uppercase" *ngIf="(updaingStyles$ | async) == 'dark'"
-        >Dark</span
-      >
-      <span class="text-uppercase" *ngIf="(updaingStyles$ | async) != 'dark'"
-        >Light</span
-      >
+      <span class="text-uppercase" *ngIf="(updaingStyles$ | async) == 'dark'">Dark</span>
+      <span class="text-uppercase" *ngIf="(updaingStyles$ | async) != 'dark'">Light</span>
     </a>
   </nav>
 </div>

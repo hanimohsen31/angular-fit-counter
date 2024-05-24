@@ -46,6 +46,6 @@ export class FooterComponent {
   }
 
   syncData() {
-    this.ExcercisesService.syncData().subscribe()
+    // this.ExcercisesService.syncData().subscribe()
   }
 }

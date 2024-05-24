@@ -1,0 +1,15 @@
+.card {
+  // max-width: 90%;
+  padding: 0;
+  // max-height: 358px;
+  height: auto;
+  .img {
+    object-fit: cover;
+    height: 100%;
+    width: 100%;
+  }
+  .chart {
+    background-color: white;
+    // height: 200px;
+  }
+}
