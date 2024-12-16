@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "target": "fitness-counter-100",
     "public": "dist/fit-counter/browser",
     "ignore": [
       "firebase.json",

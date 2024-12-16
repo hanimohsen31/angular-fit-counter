@@ -31,7 +31,7 @@ button{
 
 .records-container{
   max-height: 250px;
-  overflow: scroll;
+  overflow: auto;
   display: flex;
   flex-direction: column-reverse;
 }

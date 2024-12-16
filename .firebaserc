@@ -1,5 +1,16 @@
 {
   "projects": {
-    "default": "fit-counter"
-  }
+    "default": "collection-5000"
+  },
+  "targets": {
+    "collection-5000": {
+      "hosting": {
+        "fitness-counter-100": [
+          "fitness-counter-100"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
