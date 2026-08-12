@@ -14,6 +14,8 @@ import { CardComponent } from "./card/card.component";
       <a routerLink="/excercises" class="app-name">FitCounter</a>
       <a routerLink="/excercises" class="back-button">&#8592; Back</a>
     </nav>
+    <!-- placeholder that reserves the fixed navbar's height -->
+    <div class="navbar-spacer" aria-hidden="true"></div>
     <div class="container">
       <app-card
         *ngFor="let elm of excercisesList"
@@ -25,8 +27,14 @@ import { CardComponent } from "./card/card.component";
     </div>
   `,
   styles: `
+    :host {
+      --navbar-height: 3.5rem;
+    }
+
     .group-navbar {
       position: fixed;
+      height: var(--navbar-height);
+      box-sizing: border-box;
       top: 0;
       left: 0;
       width: 100vw;
@@ -41,9 +49,9 @@ import { CardComponent } from "./card/card.component";
       padding: 0.75rem 1rem;
     }
 
-    /* clears the fixed bar so the first card isn't hidden underneath */
-    .container {
-      padding-top: 4rem;
+    /* occupies the space the fixed bar takes out of the flow */
+    .navbar-spacer {
+      height: var(--navbar-height);
     }
 
     .app-name {
