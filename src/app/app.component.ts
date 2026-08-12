@@ -1,20 +1,15 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterOutlet } from '@angular/router';
-import { modules } from './shared/shared/shared.module';
-import { ThemeService } from './store/theme.service';
+import { Component } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterOutlet } from "@angular/router";
+import { ThemeService } from "./store/theme.service";
 
-let shared = [...modules];
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   standalone: true,
-  imports: [CommonModule, RouterOutlet, ...shared],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss',
+  imports: [CommonModule, RouterOutlet],
+  templateUrl: "./app.component.html",
 })
 export class AppComponent {
-  title = 'fit-counter';
-
   constructor(private ThemeService: ThemeService) {}
 
   ngOnInit() {

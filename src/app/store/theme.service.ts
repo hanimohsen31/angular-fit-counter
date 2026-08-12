@@ -19,6 +19,11 @@ export class ThemeService {
 
   getTheme() {
     let currunt = localStorage.getItem('theme');
+    // dark is the default: only an explicit 'light' choice opts out
+    if (!currunt) {
+      currunt = 'dark';
+      localStorage.setItem('theme', currunt);
+    }
     if (currunt == 'dark') {
       document.body.classList.add('dark');
     }

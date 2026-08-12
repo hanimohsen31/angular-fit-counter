@@ -1,3 +1,20 @@
+:root {
+  // cap the whole app at tablet width, centered on larger screens
+  --app-max-width: 768px;
+}
+
+app-root {
+  display: block;
+  width: 100%;
+  max-width: var(--app-max-width);
+  margin: 0 auto;
+}
+
+.container,
+.container-fluid {
+  max-width: var(--app-max-width);
+}
+
 .background {
   display: none;
 }
@@ -24,34 +41,14 @@
 }
 
 .dark {
-  nav,
-  .navbar {
-    background-color: #333333 !important;
-    color: white;
-    .navbar-brand {
-      color: white;
-    }
-    .navbar-toggler-icon {
-      filter: invert(1);
-    }
-    .navbar-collapse {
-      color: white;
-    }
-    .navbar-toggler {
-      border-color: white;
-      box-shadow: none;
-    }
-    a {
-      color: white !important ;
-    }
-  }
-
   .background {
     position: fixed;
     display: block;
     top: 0;
+    left: 0;
     height: 100vh;
     width: 100vw;
+    max-width: none;
     object-fit: cover;
     z-index: -10;
     opacity: 0.8;
@@ -80,30 +77,6 @@
     &:focus {
       background-color: black;
       color: white;
-    }
-  }
-
-  .footerContainer {
-    .nav {
-      background-color: #1d1a1d;
-      // border: 1px solid #252325;
-    }
-
-    .nav-item {
-      color: rgba(255, 255, 255, 0.2);
-    }
-
-    .nav-item.active {
-      color: #6ba7a8;
-    }
-
-    .nav-item.active::before {
-      content: "";
-      background: radial-gradient(#6ba7a8, transparent);
-    }
-
-    .nav-indicator {
-      background-color: #6ba7a8;
     }
   }
 

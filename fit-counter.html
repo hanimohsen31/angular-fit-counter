@@ -1,0 +1,813 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fit Counter</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" id="favicon" href="src/favicon.ico">
+
+  <!-- Bootstrap 5.3.0 (swap for assets/bs5.3.0/bootstrap.min.css to run fully offline) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+
+  <style>
+    /* ---------- global (was src/styles.scss) ---------- */
+    .background { display: none; }
+    .mb100 { margin-bottom: 100px; }
+
+    .div-beta { width: 100%; display: flex; justify-content: center; }
+    .div-beta .h1-beta {
+      background-color: #0d6efd; color: white; width: 300px; padding: 30px;
+      border-radius: 2px; position: absolute; text-align: center;
+    }
+
+    /* ---------- card.component.scss ---------- */
+    .ex-card img { transform: scale(1.01); height: 160px; object-fit: cover; }
+    .ex-card input { padding-left: 0; padding-right: 0; text-align: center; }
+    .ex-card select { padding-top: 6px; padding-bottom: 6px; border-radius: 5px; text-align: center; }
+    .ex-card .add { margin-inline-end: 3px; }
+    .ex-card button { display: flex; justify-content: center; align-items: center; width: 49.5%; }
+    .ex-card .records-container {
+      max-height: 250px; overflow: auto; display: flex; flex-direction: column-reverse;
+    }
+
+    /* ---------- stats-unit.component.scss ---------- */
+    .stats-card .card { padding: 0; height: auto; }
+    .stats-card .card .img { object-fit: cover; height: 100%; width: 100%; }
+    .stats-card .card .chart { background-color: white; }
+
+    /* ---------- excercises.component styles ---------- */
+    .ex-menu a { width: 90px; height: 50px; }
+
+    /* ---------- settings.component styles ---------- */
+    .settings-page input::placeholder { color: #ffffff61; }
+
+    /* ---------- footer.component.scss ---------- */
+    .footerContainer { position: fixed; bottom: 20px; width: 100vw; padding: 0 1rem; }
+
+    .footerContainer .nav {
+      position: relative; width: 100%; display: flex; justify-content: space-between;
+      padding: 0 20px; background-color: #0d6efd; border-radius: 30px; overflow: hidden;
+    }
+
+    .footerContainer .nav-item {
+      position: relative; display: flex; flex-direction: column; justify-content: center;
+      align-items: center; gap: 5px; width: 50px; margin: 0 5px; padding: 20px;
+      color: rgba(255, 255, 255, 0.562); text-decoration: none; transition: 0.3s; cursor: pointer;
+    }
+
+    .footerContainer .nav-item.active { color: #fff; }
+
+    .footerContainer .nav-item.active::before {
+      content: ""; position: absolute; top: 0; left: 0; width: 120%; height: 120%;
+      transform: translate(-10%, -10%); background: radial-gradient(#1ff3f7, transparent);
+      filter: blur(10px); opacity: 0.2;
+    }
+
+    .footerContainer .nav-item i { font-size: 24px; }
+    .footerContainer .nav-item span { font-size: 11px; font-weight: 600; }
+
+    .footerContainer .nav-indicator-wrapper {
+      position: absolute; top: 0; left: 10px;
+      transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.175);
+      display: flex; justify-content: center;
+    }
+
+    .footerContainer .nav-indicator {
+      width: 30px; height: 5px; background-color: #1ff3f7; border-radius: 10px;
+    }
+
+    /* ---------- dark theme ---------- */
+    .dark nav,
+    .dark .navbar { background-color: #333333 !important; color: white; }
+    .dark nav .navbar-brand,
+    .dark .navbar .navbar-brand { color: white; }
+    .dark nav .navbar-toggler-icon,
+    .dark .navbar .navbar-toggler-icon { filter: invert(1); }
+    .dark nav .navbar-collapse,
+    .dark .navbar .navbar-collapse { color: white; }
+    .dark nav .navbar-toggler,
+    .dark .navbar .navbar-toggler { border-color: white; box-shadow: none; }
+    .dark nav a,
+    .dark .navbar a { color: white !important; }
+
+    .dark .background {
+      position: fixed; display: block; top: 0; height: 100vh; width: 100vw;
+      object-fit: cover; z-index: -10; opacity: 0.8; background-color: black;
+      filter: contrast(1.5);
+    }
+
+    .dark .card { overflow: hidden; border: none; }
+    .dark .card-body { background-color: yellow; }
+    .dark .card button { background-color: black; color: white; border: none; }
+
+    .dark input { background-color: black; color: white; }
+    .dark input:focus { background-color: black; color: white; }
+
+    .dark .footerContainer .nav { background-color: #1d1a1d; }
+    .dark .footerContainer .nav-item { color: rgba(255, 255, 255, 0.2); }
+    .dark .footerContainer .nav-item.active { color: #6ba7a8; }
+    .dark .footerContainer .nav-item.active::before { content: ""; background: radial-gradient(#6ba7a8, transparent); }
+    .dark .footerContainer .nav-indicator { background-color: #6ba7a8; }
+
+    .dark .div-beta .h1-beta { background-color: #333333; }
+
+    .dark select { background-color: black; color: white; }
+    .dark option { background-color: black; color: white; }
+  </style>
+</head>
+
+<body>
+  <!-- app-navbar -->
+  <div id="navbar"></div>
+
+  <img class="background" id="background" alt="">
+
+  <!-- router-outlet -->
+  <div class="container mb100" id="view"></div>
+
+  <!-- app-footer -->
+  <div id="footer"></div>
+
+  <!-- Chart.js (used by the stats page) -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
+
+  <script>
+  (function () {
+    'use strict';
+
+    /* Prefix prepended to every asset path. 'src/' works when this file sits in
+       the repo root (images live in src/assets/images). Set it to '' if you move
+       this file next to the `assets/` folder, or to a full URL to host them. */
+    var ASSET_BASE = 'src/';
+
+    /* =========================================================
+       store/excercises.ts — the exercise catalogue
+       ========================================================= */
+    var excercises = {
+      biceps: [
+        { ex: 'biceps1', title: 'machine curls', img: 'assets/images/biceps (1).jpg', desc: 'desc' },
+        { ex: 'biceps2', title: 'barbell preacher curl', img: 'assets/images/biceps (2).jpg', desc: 'desc' },
+        { ex: 'biceps3', title: 'incline dumbbell biceps curl', img: 'assets/images/biceps (3).jpg', desc: 'desc' },
+        { ex: 'biceps5', title: 'one arm dumbbell preacher curl', img: 'assets/images/biceps (5).jpg', desc: 'desc' },
+        { ex: 'biceps6', title: 'concentration curls', img: 'assets/images/biceps (6).jpg', desc: 'desc' },
+        { ex: 'biceps7', title: 'cable biceps curl', img: 'assets/images/biceps (7).jpg', desc: 'desc' },
+        { ex: 'biceps8', title: 'standing hammer curl', img: 'assets/images/biceps (8).jpg', desc: 'desc' },
+        { ex: 'biceps12', title: 'standing barbell curls', img: 'assets/images/biceps (12).jpg', desc: 'desc' },
+        { ex: 'biceps13', title: 'alternating dumbbell hammer curl', img: 'assets/images/biceps (13).jpg', desc: 'desc' }
+      ],
+      shoulder: [
+        { ex: 'shoulder1', title: 'one arm standing dumbbel press', img: 'assets/images/shoulder (1).jpg', desc: 'desc' },
+        { ex: 'shoulder3', title: 'dumbbell lateral raises', img: 'assets/images/shoulder (3).jpg', desc: 'desc' },
+        { ex: 'shoulder6', title: 'nautilus lateral raises', img: 'assets/images/shoulder (6).jpg', desc: 'desc' },
+        { ex: 'shoulder7', title: 'standing dumbbell front raise', img: 'assets/images/shoulder (7).jpg', desc: 'desc' },
+        { ex: 'shoulder9', title: 'single arm cable lateral raises', img: 'assets/images/shoulder (9).jpg', desc: 'desc' },
+        { ex: 'shoulder18', title: 'seaated machine shoulder press', img: 'assets/images/shoulder (18).jpg', desc: 'desc' },
+        { ex: 'shoulder19', title: 'Cable Rope Rear-Delt Rows', img: 'assets/images/shoulder (19).jpg', desc: 'desc' }
+      ],
+      back: [
+        { ex: 'back3', title: 'lat pulldowns', img: 'assets/images/back (3).jpg', desc: 'desc' },
+        { ex: 'back7', title: 'seated cable rows', img: 'assets/images/back (7).jpg', desc: 'desc' },
+        { ex: 'back8', title: 'one-arm dumbbell rows', img: 'assets/images/back (8).jpg', desc: 'desc' },
+        { ex: 'back9', title: 'bent over row', img: 'assets/images/back (9).jpg', desc: 'desc' },
+        { ex: 'back15', title: 'Hammer Strength Row', img: 'assets/images/back (15).jpg', desc: 'desc' },
+        { ex: 'back16', title: 'Machine Low Row', img: 'assets/images/back (16).jpg', desc: 'desc' }
+      ],
+      buttocks: [
+        { ex: 'buttocks1', title: 'one leg cable kickback', img: 'assets/images/buttocks (1).jpg', desc: 'desc' },
+        { ex: 'buttocks2', title: 'machine hip extensions', img: 'assets/images/buttocks (2).jpg', desc: 'desc' },
+        { ex: 'buttocks3', title: 'floor hip extension', img: 'assets/images/buttocks (3).jpg', desc: 'desc' },
+        { ex: 'buttocks4', title: 'bridging', img: 'assets/images/buttocks (4).jpg', desc: 'desc' },
+        { ex: 'buttocks5', title: 'cable hip abductions', img: 'assets/images/buttocks (5).jpg', desc: 'desc' },
+        { ex: 'buttocks6', title: 'standing machine hip abductions', img: 'assets/images/buttocks (6).jpg', desc: 'desc' },
+        { ex: 'buttocks7', title: 'floor hip abductions', img: 'assets/images/buttocks (7).jpg', desc: 'desc' },
+        { ex: 'buttocks8', title: 'seated machine hip abductions', img: 'assets/images/buttocks (8).jpg', desc: 'desc' },
+        { ex: 'buttocks9', title: 'back extension', img: 'assets/images/buttocks (9).jpg', desc: 'desc' }
+      ],
+      calf: [
+        { ex: 'calf5', title: 'machine calf press', img: 'assets/images/calf (5).jpg', desc: 'desc' }
+      ],
+      legs: [
+        { ex: 'legs1', title: 'leg extension', img: 'assets/images/legs (1).jpg', desc: 'desc' },
+        { ex: 'legs2', title: 'machine adductions', img: 'assets/images/legs (2).jpg', desc: 'desc' },
+        { ex: 'legs3', title: 'lying leg curls', img: 'assets/images/legs (3).jpg', desc: 'desc' },
+        { ex: 'legs5', title: 'dumbbell lunge', img: 'assets/images/legs (5).jpg', desc: 'desc' },
+        { ex: 'legs6', title: 'seated leg curls', img: 'assets/images/legs (6).jpg', desc: 'desc' },
+        { ex: 'legs16', title: 'angled leg press', img: 'assets/images/legs (16).jpg', desc: 'desc' },
+        { ex: 'legs21', title: 'dumbbell step squat', img: 'assets/images/legs (21).jpg', desc: 'desc' },
+        { ex: 'legs22', title: 'squat', img: 'assets/images/legs (22).jpg', desc: 'desc' }
+      ],
+      wrist: [
+        { ex: 'wrist1', title: 'reversr wrist curls', img: 'assets/images/wrist (1).jpg', desc: 'desc' },
+        { ex: 'wrist2', title: 'wrist curls', img: 'assets/images/wrist (2).jpg', desc: 'desc' }
+      ],
+      traps: [
+        { ex: 'traps3', title: 'dumbbell shrugs', img: 'assets/images/traps (3).jpg', desc: 'desc' }
+      ],
+      triceps: [
+        { ex: 'triceps1', title: 'pushdowns', img: 'assets/images/triceps (1).jpg', desc: 'desc' },
+        { ex: 'triceps9', title: 'one-arm dumbbell triceps extensions', img: 'assets/images/triceps (9).jpg', desc: 'desc' },
+        { ex: 'triceps10', title: 'seated dumbbell triceps extensions', img: 'assets/images/triceps (10).jpg', desc: 'desc' },
+        { ex: 'triceps12', title: 'dumbbell triceps kickback', img: 'assets/images/triceps (12).jpg', desc: 'desc' },
+        { ex: 'triceps13', title: 'rope push down', img: 'assets/images/triceps (13).jpg', desc: 'desc' },
+        { ex: 'triceps14', title: 'rope push down', img: 'assets/images/triceps (14).jpg', desc: 'desc' },
+        { ex: 'triceps15', title: 'seating trieceps', img: 'assets/images/triceps (15).jpg', desc: 'desc' }
+      ],
+      chest: [
+        { ex: 'chest1', title: 'bench press', img: 'assets/images/chest (1).jpg', desc: 'desc' },
+        { ex: 'chest3', title: 'incline press', img: 'assets/images/chest (3).jpg', desc: 'desc' },
+        { ex: 'chest7', title: 'dumbbell press', img: 'assets/images/chest (7).jpg', desc: 'desc' },
+        { ex: 'chest8', title: 'dumbbell flys', img: 'assets/images/chest (8).jpg', desc: 'desc' },
+        { ex: 'chest9', title: 'incline dumbbell press', img: 'assets/images/chest (9).jpg', desc: 'desc' },
+        { ex: 'chest11', title: 'pec deck flys', img: 'assets/images/chest (11).jpg', desc: 'desc' },
+        { ex: 'chest12', title: 'cable crossover flys', img: 'assets/images/chest (12).jpg', desc: 'desc' },
+        { ex: 'chest13', title: 'dumbbell pullovers', img: 'assets/images/chest (13).jpg', desc: 'desc' },
+        { ex: 'chest15', title: 'decline dumbbell bench press', img: 'assets/images/chest (15).jpg', desc: 'desc' },
+        { ex: 'chest16', title: 'Supine Bench Press Matrix', img: 'assets/images/chest (17).jpg', desc: 'desc' }
+      ]
+    };
+
+    /* =========================================================
+       app.routes.ts
+       ========================================================= */
+    var routes = [
+      { path: 'home' },
+      { path: 'chest' },
+      { path: 'bieceps' },
+      { path: 'back' },
+      { path: 'triceps' },
+      { path: 'shoulder' },
+      { path: 'traps' },
+      { path: 'legs' },
+      { path: 'wrist' },
+      { path: 'stats' },
+      { path: 'excercises' },
+      { path: 'settings' },
+      { path: '**', redirectTo: 'excercises' }
+    ];
+
+    var DEFAULT_ROUTE = 'excercises';
+
+    /* =========================================================
+       helpers
+       ========================================================= */
+    function esc(v) {
+      return String(v == null ? '' : v)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+
+    function img(path) { return esc(ASSET_BASE + (path || '')); }
+
+    /* Angular's `| date` default format ("mediumDate", e.g. Jun 15, 2015) */
+    function datePipe(value) {
+      if (value == null || value === '') return '';
+      var d = new Date(value);
+      if (isNaN(d.getTime())) return '';
+      return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+    }
+
+    function el(id) { return document.getElementById(id); }
+
+    /* =========================================================
+       store/theme.service.ts
+       ========================================================= */
+    var ThemeService = {
+      toggleTheme: function () {
+        var bodyClass = document.body.classList;
+        bodyClass.toggle('dark');
+        localStorage.setItem('theme', bodyClass.contains('dark') ? 'dark' : 'light');
+      },
+      getTheme: function () {
+        if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+      }
+    };
+
+    /* =========================================================
+       store/excercises.service.ts
+       (BehaviorSubject replaced with a plain value + listeners)
+       ========================================================= */
+    var ExcercisesService = {
+      placeolderCounter: {
+        ex: '', img: '', title: '',
+        counter: [{ c1: 10, c2: 10, c3: 10, date: '20231230:5:52' }]
+      },
+
+      value: null,
+
+      init: function () {
+        this.value = [this.placeolderCounter];
+        var stored = localStorage.getItem('excercises');
+        if (stored) {
+          try { this.value = JSON.parse(stored); } catch (e) { /* keep placeholder */ }
+        }
+      },
+
+      getValue: function () { return this.value; },
+
+      save: function (ex, element) {
+        var curruntValue = this.getValue();
+        var list;
+        var isExisted = curruntValue.find(function (elm) { return elm && elm.ex === ex; });
+        if (isExisted) {
+          var index = curruntValue.findIndex(function (elm) { return elm && elm.ex === ex; });
+          curruntValue[index] = element;
+          list = curruntValue.slice();
+        } else {
+          list = curruntValue.concat([element]);
+        }
+        this.value = list;
+        localStorage.setItem('excercises', JSON.stringify(list));
+      },
+
+      remove: function (ex, indx) {
+        var curruntValue = this.getValue();
+        var list = curruntValue.slice();
+        var isExisted = curruntValue.find(function (elm) { return elm && elm.ex === ex; });
+        if (isExisted) {
+          isExisted.counter.splice(indx, 1);
+          var index = curruntValue.findIndex(function (elm) { return elm && elm.ex === ex; });
+          curruntValue[index] = isExisted;
+          list = curruntValue.slice();
+        }
+        this.value = list;
+        localStorage.setItem('excercises', JSON.stringify(list));
+      },
+
+      syncData: function () {
+        var url = 'https://fit-counter-default-rtdb.firebaseio.com/fitcounter.json';
+        var data = localStorage.getItem('excercises');
+        return fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: data
+        });
+      }
+    };
+
+    /* =========================================================
+       components/card — per-card in-memory state
+       ========================================================= */
+    var cards = {};   // ex -> { ex, img, title, desc, counterList }
+
+    function newRow() {
+      return { c1: 0, c2: 0, c3: 0, g1: 0, g2: 0, g3: 0, unit: 'kg' };
+    }
+
+    function cardInit(item) {
+      var currunt = ExcercisesService.getValue().find(function (elm) {
+        return elm && elm.ex === item.ex;
+      });
+      var counterList = (currunt && currunt.counter)
+        ? JSON.parse(JSON.stringify(currunt.counter))
+        : [newRow()];
+
+      cards[item.ex] = {
+        ex: item.ex, img: item.img, title: item.title, desc: item.desc,
+        counterList: counterList
+      };
+      return cards[item.ex];
+    }
+
+    function cardSave(ex) {
+      var card = cards[ex];
+      if (!card) return;
+      ExcercisesService.save(ex, {
+        ex: card.ex,
+        img: card.img,
+        title: card.title,
+        date: new Date().getTime(),
+        counter: card.counterList.slice()
+      });
+    }
+
+    function cardAdd(ex) {
+      var card = cards[ex];
+      if (!card) return;
+      card.counterList.push({});
+      renderRows(ex);
+    }
+
+    function cardRemove(ex, indx) {
+      var card = cards[ex];
+      if (!card) return;
+      if (card.counterList.length > 1) {
+        card.counterList.splice(indx, 1);
+        ExcercisesService.remove(ex, indx);
+        renderRows(ex);
+      }
+    }
+
+    function numAttr(v) {
+      return (v === null || v === undefined || v === '') ? '' : esc(v);
+    }
+
+    function rowHtml(ex, row, indx) {
+      row = row || {};
+      var unit = row.unit;
+      function opt(value, label) {
+        return '<option class="text-center" value="' + value + '"' +
+          (unit === value ? ' selected' : '') + '>' + label + '</option>';
+      }
+      return '' +
+        '<div class="counter d-flex flex-wrap justify-content-between">' +
+          '<div class="d-flex justify-content-end flex-column col-3">' +
+            '<label class="px-1">G1</label>' +
+            '<input class="form-control" type="number" data-ex="' + esc(ex) + '" data-i="' + indx + '" data-f="c1" value="' + numAttr(row.c1) + '">' +
+            '<input class="form-control counting" type="number" data-ex="' + esc(ex) + '" data-i="' + indx + '" data-f="g1" value="' + numAttr(row.g1) + '">' +
+          '</div>' +
+          '<div class="d-flex justify-content-end flex-column col-3">' +
+            '<label class="px-1">G2</label>' +
+            '<input class="form-control" type="number" data-ex="' + esc(ex) + '" data-i="' + indx + '" data-f="c2" value="' + numAttr(row.c2) + '">' +
+            '<input class="form-control counting" type="number" data-ex="' + esc(ex) + '" data-i="' + indx + '" data-f="g2" value="' + numAttr(row.g2) + '">' +
+          '</div>' +
+          '<div class="d-flex justify-content-end flex-column col-3">' +
+            '<label class="px-1">G3</label>' +
+            '<input class="form-control" type="number" data-ex="' + esc(ex) + '" data-i="' + indx + '" data-f="c3" value="' + numAttr(row.c3) + '">' +
+            '<input class="form-control counting" type="number" data-ex="' + esc(ex) + '" data-i="' + indx + '" data-f="g3" value="' + numAttr(row.g3) + '">' +
+          '</div>' +
+          '<div class="d-flex justify-content-between flex-column col-3">' +
+            '<label class="px-1">Unit</label>' +
+            '<select data-ex="' + esc(ex) + '" data-i="' + indx + '" data-f="unit">' +
+              opt('kg', 'KG') + opt('pd', 'Pd') + opt('plt', 'Plt') +
+            '</select>' +
+            '<div class="d-flex justify-content-between w-100">' +
+              '<button class="btn btn-outline-primary" data-act="add" data-ex="' + esc(ex) + '">+</button>' +
+              '<button class="btn btn-outline-danger" data-act="remove" data-ex="' + esc(ex) + '" data-i="' + indx + '">-</button>' +
+            '</div>' +
+          '</div>' +
+          (indx !== 0 ? '<hr class="d-flex w-100 col-12">' : '') +
+        '</div>';
+    }
+
+    function rowsHtml(ex) {
+      return cards[ex].counterList.map(function (row, indx) {
+        return rowHtml(ex, row, indx);
+      }).join('');
+    }
+
+    function renderRows(ex) {
+      var container = document.querySelector('.ex-card[data-ex="' + ex + '"] .records-container');
+      if (container) container.innerHTML = rowsHtml(ex);
+    }
+
+    function cardHtml(item) {
+      cardInit(item);
+      return '' +
+        '<div class="col my-3 ex-card" data-ex="' + esc(item.ex) + '">' +
+          '<div class="card">' +
+            '<img src="' + img(item.img) + '" class="card-img-top" alt="missing" />' +
+            '<div class="card-body">' +
+              '<h5 class="card-title text-capitalize">' + esc(item.title) + '</h5>' +
+              '<div class="card-text records-container">' + rowsHtml(item.ex) + '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }
+
+    /* =========================================================
+       pages
+       ========================================================= */
+    function exercisePage(list) {
+      return '<div class="container">' + (list || []).map(cardHtml).join('') + '</div>';
+    }
+
+    var pages = {
+      home: function () { return 'Hello Bitch'; },
+
+      chest:    function () { return exercisePage(excercises.chest); },
+      bieceps:  function () { return exercisePage(excercises.biceps); },
+      back:     function () { return exercisePage(excercises.back); },
+      triceps:  function () { return exercisePage(excercises.triceps); },
+      shoulder: function () { return exercisePage(excercises.shoulder); },
+      traps:    function () { return exercisePage(excercises.traps); },
+      legs:     function () { return exercisePage(excercises.legs.concat(excercises.calf)); },
+      wrist:    function () { return exercisePage(excercises.wrist); },
+
+      /* excercises.component.ts — routes.slice(1, -4) */
+      excercises: function () {
+        var menu = routes.slice(1, -4);
+        return '<div class="container ex-menu d-flex flex-wrap justify-content-center align-items-center my-5">' +
+          menu.map(function (r) {
+            return '<a href="#/' + esc(r.path) + '" class="card text-decoration-none m-2 p-1 text-uppercase ' +
+              'text-center d-flex justify-content-center align-items-center">' + esc(r.path) + '</a>';
+          }).join('') +
+        '</div>';
+      },
+
+      /* stats.component.ts + stats-unit.component */
+      stats: function () {
+        var stored = localStorage.getItem('excercises');
+        var data = [];
+        if (stored) {
+          try { data = JSON.parse(stored).slice(1); } catch (e) { data = []; }
+        }
+        statsData = data;
+        return '<div class="container div-beta d-flex flex-wrap mt-3">' +
+          data.map(function (elm, i) { return statsUnitHtml(elm, i); }).join('') +
+        '</div>';
+      },
+
+      /* settings.component.ts */
+      settings: function () {
+        return '' +
+          '<div class="container mt-3 text-center settings-page">' +
+            '<h1 class="text-white">Sync Data For Your App</h1>' +
+            '<label class="text-white">Enter your Exact username</label>' +
+            '<input class="form-control my-2" id="username" name="username" type="text" placeholder="Enter Username" required />' +
+            '<p class="text-white">Please Note that if the username is different you will not get any data</p>' +
+            '<h6 id="claimer" class="alert my-2" style="display:none"></h6>' +
+            '<button class="btn btn-primary mt-3 d-block mx-auto" data-act="retrieve" disabled>Retrieve Data</button>' +
+            '<button class="btn btn-primary mt-3 d-block mx-auto" data-act="update" disabled>Update Date</button>' +
+            '<button class="btn btn-primary mt-3 d-block mx-auto" data-act="download" disabled>Download Date</button>' +
+          '</div>';
+      }
+    };
+
+    /* ---------- stats unit ---------- */
+    var statsData = [];
+    var charts = [];
+
+    function statsUnitHtml(data, id) {
+      data = data || {};
+      var unit = (data.counter && data.counter[0]) ? data.counter[0].unit : undefined;
+      return '' +
+        '<div class="container w-100 stats-card">' +
+          '<div class="card mb-3">' +
+            '<div class="row g-0">' +
+              '<div class="col-md-4">' +
+                '<img src="' + img(data.img) + '" class="img img-fluid rounded-start" alt="..." />' +
+              '</div>' +
+              '<div class="col-md-8">' +
+                '<div class="card-body">' +
+                  '<h5 class="card-title text-center text-capitalize">' +
+                    '<span>' + esc(data.title) + '</span>' +
+                    '<span> </span>' +
+                    '<span class="text-capitalize">(' + esc(unit) + ')</span>' +
+                    '<span class="d-block">last Played: ' + esc(datePipe(data.date)) + '</span>' +
+                  '</h5>' +
+                  '<div class="chart"><canvas id="chart_' + id + '"></canvas></div>' +
+                '</div>' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    }
+
+    function createCharts() {
+      destroyCharts();
+      if (typeof Chart === 'undefined') return;
+      statsData.forEach(function (data, id) {
+        var weights = [], counts = [];
+        (data && data.counter ? data.counter : []).forEach(function (elm) {
+          weights.push((elm && elm.c3) || 0);
+          counts.push((elm && elm.g3) || 0);
+        });
+        var canvasElement = document.getElementById('chart_' + id);
+        if (!canvasElement) return;
+        charts.push(new Chart(canvasElement, {
+          type: 'line',
+          data: {
+            labels: counts,
+            datasets: [{
+              label: 'weight/counts',
+              data: weights,
+              fill: false,
+              borderColor: 'rgb(75, 192, 192)',
+              tension: 0.1
+            }]
+          }
+        }));
+      });
+    }
+
+    function destroyCharts() {
+      charts.forEach(function (c) { c.destroy(); });
+      charts = [];
+    }
+
+    /* =========================================================
+       components/navbar + components/footer
+       ========================================================= */
+    function renderNavbar() {
+      var links = routes.slice(0, -1);   // everything but the ** wildcard
+      el('navbar').innerHTML = '' +
+        '<nav class="navbar navbar-expand-lg bg-body-tertiary">' +
+          '<div class="container-fluid">' +
+            '<a class="navbar-brand" href="#/' + DEFAULT_ROUTE + '">Fit Counter</a>' +
+            '<div class="collapse navbar-collapse" id="navbarSupportedContent">' +
+              '<ul class="navbar-nav me-auto mb-2 mb-lg-0">' +
+                links.map(function (r) {
+                  return '<li class="nav-item">' +
+                    '<a class="nav-link active text-uppercase" href="#/' + esc(r.path) + '">' + esc(r.path) + '</a>' +
+                  '</li>';
+                }).join('') +
+              '</ul>' +
+            '</div>' +
+          '</div>' +
+        '</nav>';
+    }
+
+    function footerItem(path, label, route) {
+      var isActive = route === path;
+      return '<a href="#/' + path + '" class="nav-item' + (isActive ? ' active' : '') + '">' +
+        '<i class="bx bx-heart"></i>' +
+        '<span class="text-uppercase">' + label + '</span>' +
+        (isActive ? '<div class="nav-indicator-wrapper"><span class="nav-indicator"></span></div>' : '') +
+      '</a>';
+    }
+
+    function renderFooter(route) {
+      var isDark = localStorage.getItem('theme') === 'dark';
+      el('footer').innerHTML = '' +
+        '<div class="footerContainer">' +
+          '<nav class="nav">' +
+            footerItem('excercises', 'excercises', route) +
+            footerItem('stats', 'stats', route) +
+            footerItem('settings', 'settings', route) +
+            '<a class="nav-item" data-act="theme">' +
+              '<i class="bx bx-heart"></i>' +
+              '<span class="text-uppercase">' + (isDark ? 'Dark' : 'Light') + '</span>' +
+            '</a>' +
+          '</nav>' +
+        '</div>';
+    }
+
+    /* =========================================================
+       router
+       ========================================================= */
+    function currentRoute() {
+      var hash = location.hash.replace(/^#\/?/, '').split('?')[0];
+      return pages[hash] ? hash : DEFAULT_ROUTE;   // ** -> redirectTo: 'excercises'
+    }
+
+    function render() {
+      var route = currentRoute();
+      destroyCharts();
+      cards = {};
+      settings.username = '';
+      settings.touched = false;
+      el('view').innerHTML = pages[route]();
+      renderFooter(route);
+      if (route === 'stats') createCharts();
+      window.scrollTo(0, 0);
+    }
+
+    /* =========================================================
+       event wiring (delegated — replaces Angular bindings)
+       ========================================================= */
+    var view = el('view');
+
+    /* (change) on card inputs / select  ->  [(ngModel)] + save() */
+    view.addEventListener('change', function (e) {
+      var t = e.target;
+      var field = t.getAttribute && t.getAttribute('data-f');
+      if (!field) return;
+      var ex = t.getAttribute('data-ex');
+      var indx = Number(t.getAttribute('data-i'));
+      var card = cards[ex];
+      if (!card || !card.counterList[indx]) return;
+
+      card.counterList[indx][field] =
+        field === 'unit' ? t.value : (t.value === '' ? null : Number(t.value));
+      cardSave(ex);
+    });
+
+    /* (click) on card + / - buttons and settings buttons */
+    view.addEventListener('click', function (e) {
+      var t = e.target.closest ? e.target.closest('[data-act]') : null;
+      if (!t) return;
+      var act = t.getAttribute('data-act');
+
+      if (act === 'add') { cardAdd(t.getAttribute('data-ex')); return; }
+      if (act === 'remove') { cardRemove(t.getAttribute('data-ex'), Number(t.getAttribute('data-i'))); return; }
+      if (act === 'retrieve') { settings.retriveData(); return; }
+      if (act === 'update') { settings.updateDate(); return; }
+      if (act === 'download') { settings.downloadBackup(); return; }
+    });
+
+    /* settings: enable buttons once the username field is valid + touched */
+    view.addEventListener('blur', function (e) {
+      if (e.target.id === 'username') { settings.touched = true; settings.refresh(); }
+    }, true);
+
+    view.addEventListener('input', function (e) {
+      if (e.target.id === 'username') { settings.username = e.target.value; settings.refresh(); }
+    });
+
+    /* footer theme toggle */
+    el('footer').addEventListener('click', function (e) {
+      var t = e.target.closest ? e.target.closest('[data-act="theme"]') : null;
+      if (!t) return;
+      ThemeService.toggleTheme();
+      renderFooter(currentRoute());
+    });
+
+    /* =========================================================
+       settings.component.ts logic
+       ========================================================= */
+    var settings = {
+      username: '',
+      touched: false,
+
+      refresh: function () {
+        var valid = this.username.trim() !== '' && this.touched;
+        ['retrieve', 'update', 'download'].forEach(function (act) {
+          var btn = document.querySelector('[data-act="' + act + '"]');
+          if (btn) btn.disabled = !valid;
+        });
+      },
+
+      claim: function (message, status) {
+        var node = el('claimer');
+        if (!node) return;
+        node.textContent = message;
+        node.style.display = '';
+        node.classList.toggle('alert-danger', !status);
+        node.classList.toggle('alert-success', !!status);
+      },
+
+      url: function () {
+        return 'https://fit-counter-default-rtdb.firebaseio.com/users/' +
+          encodeURIComponent(this.username) + '.json';
+      },
+
+      updateDate: function () {
+        var self = this;
+        var data = localStorage.getItem('excercises');
+        var parsed = data ? JSON.parse(data) : null;
+        fetch(this.url(), {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(parsed)
+        }).then(function (res) {
+          if (!res.ok) throw new Error(res.status);
+          return res.json();
+        }).then(function (res) {
+          self.claim('Data Updated', true);
+          console.log(res);
+        }).catch(function () {
+          self.claim("Couldn't Update", false);
+        });
+      },
+
+      retriveData: function () {
+        var self = this;
+        var url = this.url();
+        console.log(url);
+        fetch(url).then(function (res) {
+          if (!res.ok) throw new Error(res.status);
+          return res.json();
+        }).then(function (res) {
+          if (res) {
+            self.claim('Data Retrieved And Set', true);
+            console.log(res);
+            localStorage.setItem('excercises', JSON.stringify(res));
+            ExcercisesService.init();
+          } else {
+            self.claim('Empty Data', false);
+          }
+        }).catch(function () {
+          self.claim("Couldn't Retrieve", false);
+        });
+      },
+
+      downloadBackup: function () {
+        var data = localStorage.getItem('excercises');
+        var filename = this.username;
+
+        var blob = new Blob([data], { type: 'application/json' });
+        var url = window.URL.createObjectURL(blob);
+
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename + '.json';
+        a.click();
+
+        window.URL.revokeObjectURL(url);
+      }
+    };
+
+    /* =========================================================
+       bootstrap (app.component ngOnInit)
+       ========================================================= */
+    el('favicon').href = ASSET_BASE + 'favicon.ico';
+    el('background').src = ASSET_BASE + 'assets/images/bg2.jpg';
+
+    ThemeService.getTheme();
+    ExcercisesService.init();
+    renderNavbar();
+
+    window.addEventListener('hashchange', render);
+
+    if (!location.hash) {
+      location.replace('#/' + DEFAULT_ROUTE);   // hashchange fires -> render()
+      if (!location.hash) render();
+    } else {
+      render();
+    }
+  })();
+  </script>
+</body>
+
+</html>
