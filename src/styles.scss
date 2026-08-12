@@ -3,6 +3,17 @@
   --app-max-width: 768px;
 }
 
+html {
+  height: 100%;
+}
+
+body {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
 app-root {
   display: block;
   width: 100%;
