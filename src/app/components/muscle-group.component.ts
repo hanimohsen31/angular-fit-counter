@@ -14,9 +14,10 @@ import { CardComponent } from "./card/card.component";
       <a routerLink="/excercises" class="app-name">FitCounter</a>
       <a routerLink="/excercises" class="back-button">&#8592; Back</a>
     </nav>
+    <div class="navbar-placeholder"></div>
     <!-- placeholder that reserves the fixed navbar's height -->
     <div class="navbar-spacer" aria-hidden="true"></div>
-    <div class="container">
+    <div class="d-flex flex-column gap-1 align-items-center justify-content-center">
       <app-card
         *ngFor="let elm of excercisesList"
         [title]="elm.title"
@@ -52,6 +53,11 @@ import { CardComponent } from "./card/card.component";
     /* occupies the space the fixed bar takes out of the flow */
     .navbar-spacer {
       height: var(--navbar-height);
+    }
+    
+    .navbar-spacer{
+      height: var(--navbar-height);
+      display:flex;
     }
 
     .app-name {

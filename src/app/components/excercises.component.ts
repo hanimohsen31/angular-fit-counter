@@ -10,7 +10,7 @@ import { routes } from "../app.routes";
   imports: [CommonModule, FormsModule, RouterModule],
   template: `
     <div
-      class="container d-flex flex-wrap justify-content-center align-items-center my-5"
+      class="container d-flex flex-wrap justify-content-center align-items-center h-100 align-content-center"
     >
       <a
         *ngFor="let elm of routes"
