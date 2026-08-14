@@ -106,3 +106,18 @@ app-root {
     color: white;
   }
 }
+
+.exit-hint {
+  position: fixed;
+  left: 50%;
+  bottom: calc(2rem + env(safe-area-inset-bottom));
+  transform: translateX(-50%);
+  z-index: 1080;
+  padding: 0.5rem 1rem;
+  border-radius: 2rem;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  pointer-events: none;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: #fff;
+}

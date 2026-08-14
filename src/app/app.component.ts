@@ -1,7 +1,8 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterOutlet } from "@angular/router";
 import { ThemeService } from "./store/theme.service";
+import { BackExitService } from "./store/back-exit.service";
 
 @Component({
   selector: "app-root",
@@ -10,10 +11,14 @@ import { ThemeService } from "./store/theme.service";
   templateUrl: "./app.component.html",
 })
 export class AppComponent {
+  private backExit = inject(BackExitService);
+  readonly showExitHint = this.backExit.showExitHint;
+
   constructor(private ThemeService: ThemeService) {}
 
   ngOnInit() {
     this.getTheme();
+    this.backExit.init();
   }
 
   getTheme() {

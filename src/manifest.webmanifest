@@ -1,0 +1,50 @@
+{
+  "name": "Fit Counter",
+  "short_name": "Fit Counter",
+  "description": "Track your workouts, exercises and reps by muscle group.",
+  "start_url": "/excercises",
+  "scope": "/",
+  "id": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "minimal-ui", "browser"],
+  "orientation": "portrait",
+  "background_color": "#212529",
+  "theme_color": "#212529",
+  "lang": "en",
+  "dir": "ltr",
+  "categories": ["health", "fitness", "sports"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/logo/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/logo/logo.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "All exercises",
+      "url": "/excercises",
+      "icons": [{ "src": "assets/logo/logo.png", "sizes": "512x512", "type": "image/png" }]
+    },
+    {
+      "name": "Chest",
+      "url": "/chest"
+    },
+    {
+      "name": "Back",
+      "url": "/back"
+    },
+    {
+      "name": "Legs",
+      "url": "/legs"
+    }
+  ]
+}
